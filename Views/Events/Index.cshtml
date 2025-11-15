@@ -3,6 +3,28 @@
     ViewData["Title"] = "Events";
 }
 <h2>Events</h2>
+
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-6">
+        <input type="search" name="searchTerm" value="@(ViewBag.SearchTerm ?? "")" class="form-control" placeholder="Search by title or category" />
+    </div>
+    <div class="col-md-3">
+        <select name="category" class="form-select">
+            <option value="">All Categories</option>
+            @foreach (var c in (List<string>)ViewBag.Categories)
+            {
+                <option value="@c" selected="@(ViewBag.SelectedCategory == c ? "selected" : null)">@c</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-3">
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary">Search / Filter</button>
+            <a class="btn btn-link" href="@Url.Action("Index", "Events")">Reset</a>
+        </div>
+    </div>
+</form>
+
 <div class="row">
 @foreach (var ev in Model)
 {
@@ -15,8 +37,9 @@
             <div class="card-body">
                 <h5 class="card-title">@ev.Title</h5>
                 <p class="card-text">
-                    <strong>Venue:</strong> @ev.Venue?.Name <br />
-                    <strong>Dates:</strong> @ev.StartDate.ToShortDateString() - @ev.EndDate.ToShortDateString()
+                    <strong>Category:</strong> @ev.Category <br />
+                    <strong>Venue:</strong> @ev.VenueName <br />
+                    <strong>Dates:</strong> @(ev.EndDate.HasValue ? ev.StartDate.ToShortDateString() + " - " + ev.EndDate.Value.ToShortDateString() : ev.StartDate.ToShortDateString())
                 </p>
                 <a asp-action="Details" asp-route-id="@ev.Id" class="btn btn-primary">View Details</a>
             </div>

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EventZax")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a6a67ce405f0f3af5ff6646b09f4576068596c86")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a6fb6aeedda93838b3da69ff55ff1dd1330ed0a2")]
 [assembly: System.Reflection.AssemblyProductAttribute("EventZax")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EventZax")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

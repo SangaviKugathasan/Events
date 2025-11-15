@@ -23,7 +23,7 @@
             <td>@ev.Title</td>
             <td>@ev.Category</td>
             <td>@ev.StartDate.ToShortDateString()</td>
-            <td>@ev.EndDate.ToShortDateString()</td>
+            <td>@(ev.EndDate.HasValue ? ev.EndDate.Value.ToShortDateString() : "-")</td>
             <td>@(ev.IsPublished ? "Yes" : "No")</td>
             <td>
                 <a class="btn btn-sm btn-primary" asp-action="EditEvent" asp-route-id="@ev.Id">Edit</a>

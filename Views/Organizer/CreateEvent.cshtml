@@ -1,8 +1,6 @@
 @model EventZax.Models.Event
 @{
     ViewData["Title"] = "Create Event";
-    var venues = ViewBag.Venues as List<EventZax.Models.Venue>;
-    var selectedVenueId = Model?.VenueId ?? 0; // Guard against null Model when creating
 }
 <h2>
     <a class="btn btn-secondary btn-sm me-2" href="#" onclick="history.back();return false;">&larr; Back</a>
@@ -24,28 +22,7 @@
         <span asp-validation-for="Category" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="VenueId" class="form-label">Venue</label>
-        <select asp-for="VenueId" class="form-control" required>
-            <option value="">-- Select Venue --</option>
-            @if (venues != null)
-            {
-                foreach (var v in venues)
-                {
-                    if (selectedVenueId == v.Id)
-                    {
-                        <option value="@v.Id" selected="selected">@v.Name (@v.City)</option>
-                    }
-                    else
-                    {
-                        <option value="@v.Id">@v.Name (@v.City)</option>
-                    }
-                }
-            }
-        </select>
-        <span asp-validation-for="VenueId" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="VenueName" class="form-label">Venue (name)</label>
+        <label asp-for="VenueName" class="form-label">Venue</label>
         <input asp-for="VenueName" class="form-control" />
         <span asp-validation-for="VenueName" class="text-danger"></span>
     </div>
@@ -55,8 +32,9 @@
         <span asp-validation-for="StartDate" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="EndDate" class="form-label"></label>
+        <label asp-for="EndDate" class="form-label">End Date (optional)</label>
         <input asp-for="EndDate" class="form-control" type="date" />
+        <span class="form-text text-muted">Leave empty if this is a single-day event.</span>
         <span asp-validation-for="EndDate" class="text-danger"></span>
     </div>
     <div class="mb-3">

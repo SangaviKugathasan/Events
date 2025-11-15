@@ -34,11 +34,8 @@ namespace EventZax.Controllers
             return View(events);
         }
 
-        public async Task<IActionResult> CreateEvent()
+        public IActionResult CreateEvent()
         {
-            // Pass venues to the view for dropdown
-            var venues = await _context.Venues.ToListAsync();
-            ViewBag.Venues = venues;
             return View();
         }
 
@@ -46,19 +43,18 @@ namespace EventZax.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateEvent(Event model, IFormFile ImageFile)
         {
-            // Pass venues to the view for dropdown on error
-            var venues = await _context.Venues.ToListAsync();
-            ViewBag.Venues = venues;
             try
             {
-                if (!ModelState.IsValid)
+                // Minimal validation: Title, Category and StartDate required
+                if (string.IsNullOrWhiteSpace(model.Title) || string.IsNullOrWhiteSpace(model.Category) || model.StartDate == default)
                 {
-                    // Log validation errors
-                    foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-                    {
-                        _logger.LogError("Validation error: {ErrorMessage}", error.ErrorMessage);
-                    }
-                    ModelState.AddModelError("", "Please correct the highlighted errors and try again.");
+                    ModelState.AddModelError("", "Title, Category and Start Date are required.");
+                    return View(model);
+                }
+
+                if (string.IsNullOrWhiteSpace(model.VenueName))
+                {
+                    ModelState.AddModelError("VenueName", "Venue is required.");
                     return View(model);
                 }
 
@@ -83,23 +79,30 @@ namespace EventZax.Controllers
                     model.ImagePath = string.Empty;
                 }
 
-                // If venue name is empty but VenueId is provided, set VenueName from DB
-                if (string.IsNullOrWhiteSpace(model.VenueName) && model.VenueId != 0)
+                if (model.EndDate.HasValue && model.EndDate.Value == default)
                 {
-                    var venue = await _context.Venues.FindAsync(model.VenueId);
-                    if (venue != null) model.VenueName = venue.Name;
+                    model.EndDate = null;
                 }
 
                 _context.Events.Add(model);
-                var result = await _context.SaveChangesAsync();
-                if (result > 0)
+                try
                 {
-                    _logger.LogInformation("Event created successfully with ID: {EventId}", model.Id);
+                    var result = await _context.SaveChangesAsync();
+                    if (result > 0)
+                    {
+                        _logger.LogInformation("Event created successfully with ID: {EventId}", model.Id);
+                    }
+                    else
+                    {
+                        _logger.LogError("Failed to save the event to the database.");
+                        ModelState.AddModelError("", "An error occurred while saving the event. Please try again.");
+                        return View(model);
+                    }
                 }
-                else
+                catch (DbUpdateException dbEx)
                 {
-                    _logger.LogError("Failed to save the event to the database.");
-                    ModelState.AddModelError("", "An error occurred while saving the event. Please try again.");
+                    _logger.LogError(dbEx, "DB update error while saving event.");
+                    ModelState.AddModelError("", "Database error: " + (dbEx.InnerException?.Message ?? dbEx.Message));
                     return View(model);
                 }
 
@@ -132,7 +135,7 @@ namespace EventZax.Controllers
             {
                 ev.Title = model.Title;
                 ev.Category = model.Category;
-                ev.VenueId = model.VenueId;
+                ev.VenueName = model.VenueName;
                 ev.StartDate = model.StartDate;
                 ev.EndDate = model.EndDate;
                 await _context.SaveChangesAsync();

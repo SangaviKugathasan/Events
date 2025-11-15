@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using EventZax.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 
 namespace EventZax.Controllers
 {
@@ -20,7 +21,7 @@ namespace EventZax.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchEvents(string? search, string? category, string? dateFrom, string? location)
         {
-            var query = _context.Events.Include(e => e.Venue).AsQueryable();
+            var query = _context.Events.AsQueryable();
 
             if (!string.IsNullOrEmpty(search))
             {
@@ -39,7 +40,8 @@ namespace EventZax.Controllers
 
             if (!string.IsNullOrEmpty(location))
             {
-                query = query.Where(e => e.Venue != null && e.Venue.City != null && e.Venue.City.Contains(location));
+                // match against VenueName now that Event no longer has a Venue navigation
+                query = query.Where(e => e.VenueName != null && e.VenueName.Contains(location));
             }
 
             var events = await query.ToListAsync();
@@ -49,7 +51,7 @@ namespace EventZax.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEventDetails(int id)
         {
-            var ev = await _context.Events.Include(e => e.Venue).FirstOrDefaultAsync(e => e.Id == id);
+            var ev = await _context.Events.FirstOrDefaultAsync(e => e.Id == id);
             if (ev == null) return NotFound();
             return Ok(ev);
         }

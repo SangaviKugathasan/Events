@@ -33,10 +33,9 @@ namespace EventZax.Data
             {
                 entity.Property(e => e.Title).IsRequired().HasColumnType("TEXT");
                 entity.Property(e => e.Category).IsRequired().HasColumnType("TEXT");
-                entity.Property(e => e.VenueId).HasColumnType("INTEGER");
                 entity.Property(e => e.VenueName).IsRequired().HasColumnType("TEXT").HasDefaultValue("");
                 entity.Property(e => e.StartDate).IsRequired().HasColumnType("TEXT");
-                entity.Property(e => e.EndDate).IsRequired().HasColumnType("TEXT");
+                entity.Property(e => e.EndDate).HasColumnType("TEXT"); // allow nulls
                 entity.Property(e => e.IsPublished).HasColumnType("INTEGER").HasDefaultValue(false);
                 entity.Property(e => e.OrganizerId).HasColumnType("TEXT");
                 entity.Property(e => e.ImagePath).HasColumnType("TEXT").HasDefaultValue("");
@@ -48,14 +47,13 @@ namespace EventZax.Data
                 new Venue { Id = 2, Name = "Convention Center", Address = "456 Center Ave", City = "Midtown", Capacity = 3000 }
             );
 
-            // Seed events
+            // Seed events (use VenueName rather than VenueId)
             modelBuilder.Entity<Event>().HasData(
                 new Event
                 {
                     Id = 1,
                     Title = "Tech Conference 2025",
                     Category = "Technology",
-                    VenueId = 1,
                     VenueName = "Main Arena",
                     StartDate = new DateTime(2025, 10, 1),
                     EndDate = new DateTime(2025, 10, 3),
@@ -68,7 +66,6 @@ namespace EventZax.Data
                     Id = 2,
                     Title = "Music Festival 2025",
                     Category = "Music",
-                    VenueId = 2,
                     VenueName = "Convention Center",
                     StartDate = new DateTime(2025, 11, 15),
                     EndDate = new DateTime(2025, 11, 17),
@@ -78,7 +75,7 @@ namespace EventZax.Data
                 }
             );
 
-            // Seed ticket tiers
+            // Seed ticket tiers - these reference EventId (no change)
             modelBuilder.Entity<TicketTier>().HasData(
                 new TicketTier { Id = 1, EventId = 1, Name = "Early Bird", Price = 299.99M, QuantityAvailable = 1000 },
                 new TicketTier { Id = 2, EventId = 1, Name = "Regular", Price = 499.99M, QuantityAvailable = 2000 },

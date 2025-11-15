@@ -17,16 +17,17 @@
         <input asp-for="Category" class="form-control" />
     </div>
     <div class="mb-3">
-        <label asp-for="VenueId" class="form-label">Venue</label>
-        <input asp-for="VenueId" class="form-control" />
+        <label asp-for="VenueName" class="form-label">Venue</label>
+        <input asp-for="VenueName" class="form-control" />
     </div>
     <div class="mb-3">
         <label asp-for="StartDate" class="form-label"></label>
         <input asp-for="StartDate" class="form-control" type="date" />
     </div>
     <div class="mb-3">
-        <label asp-for="EndDate" class="form-label"></label>
-        <input asp-for="EndDate" class="form-control" type="date" />
+        <label asp-for="EndDate" class="form-label">End Date (optional)</label>
+        <input asp-for="EndDate" class="form-control" type="date"
+            value="@(Model.EndDate?.ToString("yyyy-MM-dd") ?? string.Empty)" />
     </div>
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>

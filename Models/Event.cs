@@ -11,16 +11,13 @@ namespace EventZax.Models
         public string Title { get; set; } = string.Empty;
         [Required]
         public string Category { get; set; } = string.Empty;
-        [Required]
-        public int VenueId { get; set; } // VenueId must be required for validation
-        public Venue? Venue { get; set; }
-        // Free-text venue name (if organizer supplies a new venue)
+        // Free-text venue name (organizers supply the venue name directly)
         [Required]
         public string VenueName { get; set; } = string.Empty;
         [Required]
         public DateTime StartDate { get; set; }
-        [Required]
-        public DateTime EndDate { get; set; }
+        // EndDate is optional because some events are single-day
+        public DateTime? EndDate { get; set; }
         public bool IsPublished { get; set; }
         public string? OrganizerId { get; set; }
         [ForeignKey("OrganizerId")]
