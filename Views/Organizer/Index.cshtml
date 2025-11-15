@@ -1,0 +1,42 @@
+@model IEnumerable<EventZax.Models.Event>
+@{
+    ViewData["Title"] = "Organizer Dashboard";
+}
+
+<h1>Organizer Dashboard</h1>
+<a class="btn btn-success mb-3" asp-action="CreateEvent">Create New Event</a>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Published</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var ev in Model)
+    {
+        <tr>
+            <td>@ev.Title</td>
+            <td>@ev.Category</td>
+            <td>@ev.StartDate.ToShortDateString()</td>
+            <td>@ev.EndDate.ToShortDateString()</td>
+            <td>@(ev.IsPublished ? "Yes" : "No")</td>
+            <td>
+                <a class="btn btn-sm btn-primary" asp-action="EditEvent" asp-route-id="@ev.Id">Edit</a>
+                @if (!ev.IsPublished)
+                {
+                    <form asp-action="PublishEvent" method="post" style="display:inline">
+                        <input type="hidden" name="id" value="@ev.Id" />
+                        <button type="submit" class="btn btn-sm btn-success">Publish</button>
+                    </form>
+                }
+                <a class="btn btn-sm btn-info" asp-action="Attendance" asp-route-eventId="@ev.Id">Attendance</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

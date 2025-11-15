@@ -1,0 +1,56 @@
+@model IEnumerable<EventZax.Models.Attendance>
+@{
+    var ev = ViewBag.Event as EventZax.Models.Event;
+    ViewData["Title"] = $"Attendance for {ev?.Title}";
+}
+<div class="d-flex align-items-center mb-3">
+    <a class="btn btn-secondary btn-sm me-2" href="#" onclick="history.back();return false;">&larr; Back</a>
+    <h2 class="m-0">Attendance for @ev?.Title</h2>
+    <div class="ms-auto">
+        <a class="btn btn-outline-primary btn-sm" href="@Url.Action("Index", "Organizer")">Dashboard</a>
+    </div>
+</div>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Tel</th>
+            <th>Address</th>
+            <th>Checked In</th>
+            <th>Check-In Time</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var attendee in Model)
+    {
+        <tr>
+            <td>@attendee.FullName</td>
+            <td>@attendee.UserId</td>
+            <td>@attendee.Tel</td>
+            <td>@attendee.Address</td>
+            <td>@(attendee.IsCheckedIn ? "Yes" : "No")</td>
+            <td>@(attendee.CheckInTime?.ToString("g") ?? "-")</td>
+            <td>
+                @if (!attendee.IsCheckedIn)
+                {
+                    <form asp-action="CheckInAttendee" method="post" style="display:inline" onsubmit="return confirm('Confirm check-in for @attendee.FullName?');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="attendanceId" value="@attendee.Id" />
+                        <button type="submit" class="btn btn-success btn-sm">Check In</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="UncheckAttendee" method="post" style="display:inline" onsubmit="return confirm('Undo check-in for @attendee.FullName?');">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="attendanceId" value="@attendee.Id" />
+                        <button type="submit" class="btn btn-warning btn-sm">Undo Check-In</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

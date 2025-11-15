@@ -1,0 +1,15 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center mt-4">
+    <!-- Full-width looking hero image (scaled inside container) -->
+    <img src="/images/hero.jpg?v=2" alt="Events Hero" class="hero-image mb-4 shadow-sm" />
+
+    <h1 class="display-4">Welcome to EventZax</h1>
+    <p class="lead">Your one-stop platform for discovering, managing, and booking events.</p>
+    <div class="mt-4">
+        <a class="btn btn-primary me-2" asp-controller="Auth" asp-action="Login">Login</a>
+        <a class="btn btn-outline-primary" asp-controller="Auth" asp-action="Register">Register</a>
+    </div>
+</div>

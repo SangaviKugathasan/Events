@@ -1,0 +1,44 @@
+@model IEnumerable<EventZax.Models.ApplicationUser>
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h1>Organizer Management</h1>
+<p>View all organizers, their approval status, and approve or revoke as needed.</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Approved</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var organizer in Model)
+    {
+        <tr>
+            <td>@organizer.Email</td>
+            <td>@(organizer.IsApproved ? "Yes" : "No")</td>
+            <td>
+                @if (!organizer.IsApproved)
+                {
+                    <form asp-action="ApproveOrganizer" method="post" style="display:inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@organizer.Id" />
+                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-action="RevokeOrganizer" method="post" style="display:inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@organizer.Id" />
+                        <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
+                    </form>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,26 @@
+@model IEnumerable<EventZax.Models.Event>
+@{
+    ViewData["Title"] = "Events";
+}
+<h2>Events</h2>
+<div class="row">
+@foreach (var ev in Model)
+{
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            @if (!string.IsNullOrEmpty(ev.ImagePath))
+            {
+                <img src="@ev.ImagePath" class="card-img-top" style="height:200px;object-fit:cover;" alt="@ev.Title" />
+            }
+            <div class="card-body">
+                <h5 class="card-title">@ev.Title</h5>
+                <p class="card-text">
+                    <strong>Venue:</strong> @ev.Venue?.Name <br />
+                    <strong>Dates:</strong> @ev.StartDate.ToShortDateString() - @ev.EndDate.ToShortDateString()
+                </p>
+                <a asp-action="Details" asp-route-id="@ev.Id" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    </div>
+}
+</div>
